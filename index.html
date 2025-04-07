@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <!--leaflet Routing machine css -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"
+    />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="container_item">
+        <div class="form">
+          <div class="title">Thêm Điểm</div>
+          <div class="inputlat">
+            <input id="lat" type="text" name="latitude" placeholder="Vĩ Độ " oninput="showSuggestions()"/>
+            <div id="latSuggestions"></div>
+          </div>
+          <div>
+            <input id="lng" type="text" name="longitude" placeholder="Kinh Độ"/>
+          </div>
+          <button class="btnAdd" onclick="handleClick()">Thêm</button>
+        </div>
+        <div class="listPointer">
+          <h2>Danh Sách Tọa Độ</h2>
+          <div id="coordinates"></div>
+        </div>
+      </div>
+      <div id="map"></div>
+    </div>
+    <!--leaflet Routing machine js-->
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <script src="./assets/index.js"></script>
+  </body>
+</html>

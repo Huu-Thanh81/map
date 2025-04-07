@@ -1,0 +1,126 @@
+*{
+  box-sizing: border-box;
+}
+#map {
+  flex: 1;
+  height: 500px;
+  border-radius: 12px;
+}
+.container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+.container .form .title{
+  font-weight: 700;
+  font-size: 36px;
+  text-align: center;
+  color: orange;
+}
+.container .form  input{
+  width: 100%;
+  font-size: 20px;
+  padding: 10px;
+  margin-top: 20px;
+  outline: none;
+  border:1px solid orange;
+  border-radius: 8px;
+}
+.container .form  .btnAdd{
+  font-weight: 700;
+  border-radius: 20px;
+  margin-top: 10px;
+  font-size: 20px;
+  padding: 10px;
+  background-color: orange;
+  color: #fff;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+}
+.container_item .form{
+  width:  100%;
+  height: 255px;
+  padding: 10px 15px 20px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+}
+.container_item{
+  width: 25%;
+  padding: 10px;
+}
+.container #coordinates .list{
+  text-align: center;
+  font-size: 25px;
+  color: #fff;
+  font-weight: 600;
+}
+.container .leaflet-popup-content-wrapper, .container .leaflet-popup-tip{
+  background: orange;
+  color: #fff;
+  font-size: 13px;
+}
+.container .leaflet-popup{
+  bottom: 22px !important;
+}
+.container .leaflet-pane .leaflet-marker-icon{
+  margin-left: -18px !important;
+  margin-top: -36px !important;
+}
+.container table{
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #fff;
+}
+.container table td,  .container table tr, .container table th{
+  width: 20%;
+  border: 1px solid #fff;
+  text-align: center
+}
+.container .listPointer{
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  height: 220px;
+  overflow-y: auto;
+  border-radius: 12px;
+  padding: 10px;
+  width: 100%;
+  background-color: orange;
+  color: #fff;
+}
+.container .listPointer h2{
+  text-align: center;
+  margin: 0 0 10px;
+}
+.container .inputlat{
+  position: relative;
+}
+.container .inputlat .suggestions{
+  text-align: center;
+  z-index: 999;
+  width: 50%;
+  top: 65px;
+  right: -2px;
+  position: absolute;
+  background-color: orange;
+  margin-top: 5px;
+  border-radius: 8px;
+  color: #fff;
+  padding: 5px;
+}
+.container .suggestions .suggestion-item{
+  cursor: pointer;
+}
+.container .suggestions::before{
+  top: -7px;
+  right: 13px;
+  position: absolute;
+  content: "";
+  width: 0px;
+  height: 0px;
+  border-style: solid;
+  border-width: 0 10px 10px 10px;
+  border-color: transparent transparent orange transparent;
+  transform: rotate(0deg);
+}
