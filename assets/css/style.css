@@ -124,3 +124,12 @@
   border-color: transparent transparent orange transparent;
   transform: rotate(0deg);
 }
+.container .suggestion-item:hover {
+  background-color: #FFB84D;
+  color: #fff;
+  border-radius: 2px;
+}
+.container table tr:hover{
+  cursor: pointer;
+  
+}
