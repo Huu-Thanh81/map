@@ -66,19 +66,25 @@ map.on("click", (e) => {
   funUpdate();
   AppHTML();
   //zoom
+  zoom();
+});
+const zoom = () =>{
   let aparts = [];
   for(let i = 0;i< points.length; ++i){
   let apart = document.querySelector(`#tr${i}`);
   aparts.push(apart);
-  
   aparts[i].addEventListener('mouseover', ()=>{
     map.flyTo(points[i], 15);
   })
   aparts[i].addEventListener('mouseleave', ()=>{
+    map.flyTo(points[i], 13);
+  })
+  let listpointer = document.querySelector(".container .listPointer");
+  listpointer.addEventListener('click', ()=>{
     map.flyTo([10.0218, 105.7846], 13);
   })
 }
-});
+}
 const funHover = (pointer) => {
   pointer.on("mouseover", function () {
     this.openPopup();
