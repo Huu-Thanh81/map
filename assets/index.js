@@ -15,6 +15,7 @@ const customuser = L.icon({
 });
 //*Câu 1: Xây dựng bản đồ các điểm bán hàng có sẵn
 const storeLocations = [
+  { name: "user", position: [10.05119, 105.77371] }, //vị trí người đang đứng
   { name: "Cửa hàng 1", position: [10.0191, 105.7819] },
   { name: "Cửa hàng 2", position: [9.994, 105.71646] },
   { name: "Cửa hàng 3", position: [10.06504, 105.7592] },
@@ -22,77 +23,99 @@ const storeLocations = [
   { name: "Cửa hàng 5", position: [10.0257, 105.6868] },
 ];
 // Thêm các điểm bán hàng lên bản đồ
-var standinPoint = L.marker([10.05119, 105.77371], { icon: customuser })
-  .addTo(map)
-  .bindPopup(`Điểm đang đứng`);
-standinPoint.on("mouseover", function () {
-  this.openPopup();
-});
 //*Câu 2:
-storeLocations.forEach(function (store) {
-  const marker = L.marker(store.position, { icon: customIcon })
-    .addTo(map)
-    .bindPopup(
-      `Tọa độ ${store.name}:<br/> (${store.position[0]}, ${store.position[1]})`
-    );
-  marker.on("click", () => {
-    L.Routing.control({
-      waypoints: [L.latLng(10.05119, 105.77371), L.latLng(store.position)],
-      createMarker: function (i, waypoint, n) {
-        return null; // không tạo marker nào cả (ẩn luôn icon mặc định)
-      },
-    })
-      .on("routesfound", function (e) {
-        e.routes[0].coordinates.forEach((item, index) => {
-          setTimeout(() => {
-            standinPoint.setLatLng([item.lat, item.lng]);
-          }, index * 30);
-        });
-        console.log(e);
+var standinPoint;
+storeLocations.forEach(function (store, index) {
+  if (store.name === "user") {
+    standinPoint = L.marker(store.position, { icon: customuser })
+      .addTo(map)
+      .bindPopup(`Điểm đang đứng`);
+    standinPoint.on("mouseover", function () {
+      this.openPopup();
+    }).on("click", ()=>{
+      AppHTML(standinPoint, index-1)
+    });
+  } else {
+    const marker = L.marker(store.position, { icon: customIcon })
+      .addTo(map)
+      .bindPopup(
+        `Tọa độ ${store.name}:<br/> (${store.position[0].toFixed(
+          3
+        )}, ${store.position[1].toFixed(3)})`
+      );
+    funHover(marker);
+    marker.on("click", () => {
+      AppHTML(marker,index-1 )
+      L.Routing.control({
+        waypoints: [
+          L.latLng(storeLocations[0].position),
+          L.latLng(store.position),
+        ],
+        createMarker: function (i, waypoint, n) {
+          return null; // không tạo marker nào cả (ẩn luôn icon mặc định)
+        },
       })
-      .addTo(map);
-  });
+        .on("routesfound", function (e) {
+          e.routes[0].coordinates.forEach((item, index) => {
+            setTimeout(() => {
+              standinPoint.setLatLng([item.lat, item.lng]);
+            }, index * 30);
+          });
+        })
+        .addTo(map);
+    });
+  }
 });
 //*Câu 3, 4, 5:
 // Chọn hai điểm bất kỳ trên bản đồ
 let coordContainer = document.getElementById("coordinates");
 let points = [];
 let PointerInit;
+let ArrayPInit = [];
 let count = 0;
 map.on("click", (e) => {
   points.push(e.latlng);
   ++count;
   poiAdd(e.latlng.lat, e.latlng.lng);
   funUpdate();
-  AppHTML();
+  AppHTML(points);
   //zoom
   zoom();
 });
-const zoom = () =>{
+const zoom = () => {
   let aparts = [];
-  for(let i = 0;i< points.length; ++i){
-  let apart = document.querySelector(`#tr${i}`);
-  aparts.push(apart);
-  aparts[i].addEventListener('mouseover', ()=>{
-    map.flyTo(points[i], 15);
-  })
-  aparts[i].addEventListener('mouseleave', ()=>{
-    map.flyTo(points[i], 13);
-  })
-  let listpointer = document.querySelector(".container .listPointer");
-  listpointer.addEventListener('click', ()=>{
-    map.flyTo([10.0218, 105.7846], 13);
-  })
-}
-}
-const funHover = (pointer) => {
+  for (let i = 0; i < points.length; ++i) {
+    let apart = document.querySelector(`#tr${i}`);
+    aparts.push(apart);
+    aparts[i].addEventListener("mouseover", () => {
+      map.flyTo(points[i], 15);
+      ArrayPInit[i]
+        .bindPopup(
+          `Điểm ${i + 1}<br/>Tọa độ: (${[
+            points[i].lat.toFixed(3),
+            points[i].lng.toFixed(3),
+          ]})`
+        )
+        .openPopup();
+    });
+    aparts[i].addEventListener("mouseleave", () => {
+      map.flyTo(points[i], 13);
+      ArrayPInit[i].closePopup();
+    });
+    let listpointer = document.querySelector(".container .listPointer");
+    listpointer.addEventListener("click", () => {
+      map.flyTo([10.0218, 105.7846], 13);
+    });
+  }
+};
+function funHover(pointer) {
   pointer.on("mouseover", function () {
     this.openPopup();
   });
   pointer.on("mouseout", function () {
     this.closePopup();
   });
-};
+}
 const poiAdd = (lat, lng) => {
   PointerInit = L.marker([lat, lng], {
     icon: L.icon({
@@ -102,9 +125,31 @@ const poiAdd = (lat, lng) => {
   })
     .addTo(map)
     .bindPopup(
-      `Điểm ${count}<br/>Tọa độ: (${[lat.toFixed(2), lng.toFixed(2)]})`
+      `Điểm ${count}<br/>Tọa độ: (${[lat.toFixed(3), lng.toFixed(3)]})`
     );
-  funHover(PointerInit);
+  ArrayPInit.push(PointerInit);
+  for (let i = 0; i < ArrayPInit.length; ++i) {
+    funHover(ArrayPInit[i]);
+    ArrayPInit[i].on("click", () => {
+      AppHTML(ArrayPInit[i], i);
+      let apart = document.querySelector(`#tr${i}`);
+      apart.addEventListener("mouseover", () => {
+        map.flyTo(ArrayPInit[i]._latlng, 15);
+        ArrayPInit[i]
+          .bindPopup(
+            `Điểm ${i + 1}<br/>Tọa độ: (${[
+              points[i].lat.toFixed(3),
+              points[i].lng.toFixed(3),
+            ]})`
+          )
+          .openPopup();
+      });
+      apart.addEventListener("mouseleave", () => {
+        map.flyTo(ArrayPInit[i]._latlng, 13);
+        ArrayPInit[i].closePopup();
+      });
+    });
+  }
 };
 const funUpdate = () => {
   if (points.length >= 2) {
@@ -118,15 +163,23 @@ const funUpdate = () => {
   }
 };
 //*Câu 7:
-const AppHTML = () => {
+const AppHTML = (point, id = 0) => {
   var chuoi = "";
-  points.forEach((item, index) => {
-    chuoi += `<tr id = "tr${index}">
-    <td>${index + 1}</td>
-    <td>${item.lat.toFixed(2)}</td>
-    <td>${item.lng.toFixed(2)}</td>
+  try {
+    point.forEach((item, index) => {
+      chuoi += `<tr id = "tr${index}">
+      <td>${index + 1}</td>
+      <td>${item.lat.toFixed(3)}</td>
+      <td>${item.lng.toFixed(3)}</td>
+    </tr>`;
+    });
+  } catch (error) {
+    chuoi += `<tr id = "tr${id}">
+    <td>${id + 1}</td>
+    <td>${point._latlng.lat.toFixed(3)}</td>
+    <td>${point._latlng.lng.toFixed(3)}</td>
   </tr>`;
-  });
+  }
   var chuoixuli = `
           <table >
             <tr>
@@ -146,11 +199,13 @@ function addPoint(Lat, Lng) {
   ++count;
   poiAdd(Lat, Lng);
   funUpdate();
-  AppHTML();
+  AppHTML(points);
+  zoom();
 }
 const handleClick = () => {
   var valuelati = Number(document.querySelector(".container #lat").value);
   var valuelong = Number(document.querySelector(".container #lng").value);
+  console.log(ArrayPInit);
   if (valuelati && valuelong) {
     addPoint(valuelati, valuelong);
     document.querySelector(".container #lat").value = "";
